@@ -47,8 +47,8 @@ function analiz(payload, event) {
       return;
     }
 
-    var mesaj = "Rekabet Hukuku Uyarisi | Skor: " + (karar.skor || "?") +
-                "/10 | " + (karar.aciklama || "");
+    var aciklama = (karar.aciklama || "").substring(0, 80);
+    var mesaj = "MailGuard | Skor: " + (karar.skor || "?") + "/10 | " + aciklama;
 
     if (aktifMod === "SERBEST") {
       event.completed({ allowEvent: true });
