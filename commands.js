@@ -48,7 +48,6 @@ function analiz(payload, event) {
     }
 
     var aciklama = (karar.aciklama || "").substring(0, 60);
-    var mesaj1 = "Mailiniz Rekabet Hukuku Mevzuati kapsaminda uygun degil.";
     var mesaj2 = "Risk Skoru: " + (karar.skor || "?") + "/10 | " + aciklama;
 
     if (aktifMod === "SERBEST") {
@@ -56,12 +55,6 @@ function analiz(payload, event) {
 
     } else if (aktifMod === "KONTROLLU") {
       Office.context.mailbox.item.notificationMessages.replaceAsync("mailguard_1", {
-        type: Office.MailboxEnums.ItemNotificationMessageType.InformationalMessage,
-        message: mesaj1,
-        icon: "Icon.16x16",
-        persistent: true
-      });
-      Office.context.mailbox.item.notificationMessages.replaceAsync("mailguard_2", {
         type: Office.MailboxEnums.ItemNotificationMessageType.InformationalMessage,
         message: mesaj2,
         icon: "Icon.16x16",
@@ -71,10 +64,6 @@ function analiz(payload, event) {
 
     } else {
       Office.context.mailbox.item.notificationMessages.replaceAsync("mailguard_1", {
-        type: Office.MailboxEnums.ItemNotificationMessageType.ErrorMessage,
-        message: mesaj1
-      });
-      Office.context.mailbox.item.notificationMessages.replaceAsync("mailguard_2", {
         type: Office.MailboxEnums.ItemNotificationMessageType.InformationalMessage,
         message: mesaj2,
         icon: "Icon.16x16",
