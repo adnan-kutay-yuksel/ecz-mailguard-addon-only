@@ -6,14 +6,14 @@ const JWT_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrdWxsYW5pY2kiOiJ0ZXN0
 Office.initialize = function () {};
 
 function onItemSend(event) {
-  const item     = Office.context.mailbox.item;
-  const gonderen = Office.context.mailbox.userProfile.emailAddress || "";
+  var item     = Office.context.mailbox.item;
+  var gonderen = Office.context.mailbox.userProfile.emailAddress || "";
 
   item.subject.getAsync(function (subjectResult) {
-    const konu = subjectResult.value || "";
+    var konu = subjectResult.value || "";
 
     item.body.getAsync(Office.CoercionType.Text, function (bodyResult) {
-      const icerik = bodyResult.value || "";
+      var icerik = bodyResult.value || "";
       analiz({ konu: konu, icerik: icerik, gonderen: gonderen }, event);
     });
   });
@@ -47,25 +47,38 @@ function analiz(payload, event) {
       return;
     }
 
-    var aciklama = (karar.aciklama || "").substring(0, 80);
-    var mesaj = "MailGuard | Skor: " + (karar.skor || "?") + "/10 | " + aciklama;
+    var aciklama = (karar.aciklama || "").substring(0, 60);
+    var mesaj1 = "Mailiniz Rekabet Hukuku Mevzuati kapsaminda uygun degil.";
+    var mesaj2 = "Risk Skoru: " + (karar.skor || "?") + "/10 | " + aciklama;
 
     if (aktifMod === "SERBEST") {
       event.completed({ allowEvent: true });
 
     } else if (aktifMod === "KONTROLLU") {
-      Office.context.mailbox.item.notificationMessages.replaceAsync("mailguard", {
+      Office.context.mailbox.item.notificationMessages.replaceAsync("mailguard_1", {
         type: Office.MailboxEnums.ItemNotificationMessageType.InformationalMessage,
-        message: mesaj,
+        message: mesaj1,
+        icon: "Icon.16x16",
+        persistent: true
+      });
+      Office.context.mailbox.item.notificationMessages.replaceAsync("mailguard_2", {
+        type: Office.MailboxEnums.ItemNotificationMessageType.InformationalMessage,
+        message: mesaj2,
         icon: "Icon.16x16",
         persistent: true
       });
       event.completed({ allowEvent: true });
 
     } else {
-      Office.context.mailbox.item.notificationMessages.replaceAsync("mailguard", {
+      Office.context.mailbox.item.notificationMessages.replaceAsync("mailguard_1", {
         type: Office.MailboxEnums.ItemNotificationMessageType.ErrorMessage,
-        message: mesaj
+        message: mesaj1
+      });
+      Office.context.mailbox.item.notificationMessages.replaceAsync("mailguard_2", {
+        type: Office.MailboxEnums.ItemNotificationMessageType.InformationalMessage,
+        message: mesaj2,
+        icon: "Icon.16x16",
+        persistent: true
       });
       event.completed({ allowEvent: false });
     }
