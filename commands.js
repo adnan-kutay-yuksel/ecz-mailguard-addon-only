@@ -2,55 +2,47 @@
 
 const API_BASE = "https://unworthy-dreamily-calculus.ngrok-free.dev";
 
-var JWT_TOKEN = null;
-
 Office.onReady(function () {
-  // Kullanici email adresini al, token iste
-  var gonderen = Office.context.mailbox.userProfile.emailAddress || "bilinmiyor";
-  fetch(API_BASE + "/token", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ kullanici: gonderen })
-  })
-  .then(function (res) { return res.json(); })
-  .then(function (data) {
-    JWT_TOKEN = data.token;
-  })
-  .catch(function (err) {
-    console.error("MailGuard token alinamadi:", err);
-  });
-
   Office.actions.associate("onItemSend", onItemSend);
 });
 
 Office.initialize = function () {};
 
 function onItemSend(event) {
-  if (!JWT_TOKEN) {
-    // Token yoksa engelleme, geç
-    event.completed({ allowEvent: true });
-    return;
-  }
-
   var item     = Office.context.mailbox.item;
-  var gonderen = Office.context.mailbox.userProfile.emailAddress || "";
+  var gonderen = Office.context.mailbox.userProfile.emailAddress || "bilinmiyor";
 
   item.subject.getAsync(function (subjectResult) {
     var konu = subjectResult.value || "";
 
     item.body.getAsync(Office.CoercionType.Text, function (bodyResult) {
       var icerik = bodyResult.value || "";
-      analiz({ konu: konu, icerik: icerik, gonderen: gonderen }, event);
+
+      // Önce token al, sonra analiz et
+      fetch(API_BASE + "/token", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ kullanici: gonderen })
+      })
+      .then(function (res) { return res.json(); })
+      .then(function (tokenData) {
+        var jwt = tokenData.token;
+        analiz({ konu: konu, icerik: icerik, gonderen: gonderen }, jwt, event);
+      })
+      .catch(function (err) {
+        console.error("MailGuard token hatasi:", err);
+        event.completed({ allowEvent: true });
+      });
     });
   });
 }
 
-function analiz(payload, event) {
+function analiz(payload, jwt, event) {
   fetch(API_BASE + "/analiz", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": "Bearer " + JWT_TOKEN
+      "Authorization": "Bearer " + jwt
     },
     body: JSON.stringify(payload)
   })
