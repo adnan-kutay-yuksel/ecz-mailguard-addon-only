@@ -1,11 +1,37 @@
 // MailGuard — On-Send Handler
 
-const API_BASE  = "https://unworthy-dreamily-calculus.ngrok-free.dev";
-const JWT_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrdWxsYW5pY2kiOiJ0ZXN0In0.nzZfgN5MVkyL3Sdr_0hJRVl8FavUkQ1R44pOHNhOUtQ";
+const API_BASE = "https://unworthy-dreamily-calculus.ngrok-free.dev";
+
+var JWT_TOKEN = null;
+
+Office.onReady(function () {
+  // Kullanici email adresini al, token iste
+  var gonderen = Office.context.mailbox.userProfile.emailAddress || "bilinmiyor";
+  fetch(API_BASE + "/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ kullanici: gonderen })
+  })
+  .then(function (res) { return res.json(); })
+  .then(function (data) {
+    JWT_TOKEN = data.token;
+  })
+  .catch(function (err) {
+    console.error("MailGuard token alinamadi:", err);
+  });
+
+  Office.actions.associate("onItemSend", onItemSend);
+});
 
 Office.initialize = function () {};
 
 function onItemSend(event) {
+  if (!JWT_TOKEN) {
+    // Token yoksa engelleme, geç
+    event.completed({ allowEvent: true });
+    return;
+  }
+
   var item     = Office.context.mailbox.item;
   var gonderen = Office.context.mailbox.userProfile.emailAddress || "";
 
@@ -48,7 +74,7 @@ function analiz(payload, event) {
     }
 
     var aciklama = (karar.aciklama || "").substring(0, 60);
-    var mesaj2 = "Risk Skoru: " + (karar.skor || "?") + "/10 | " + aciklama;
+    var mesaj = "Risk Skoru: " + (karar.skor || "?") + "/10 | " + aciklama;
 
     if (aktifMod === "SERBEST") {
       event.completed({ allowEvent: true });
@@ -56,7 +82,7 @@ function analiz(payload, event) {
     } else if (aktifMod === "KONTROLLU") {
       Office.context.mailbox.item.notificationMessages.replaceAsync("mailguard_1", {
         type: Office.MailboxEnums.ItemNotificationMessageType.InformationalMessage,
-        message: mesaj2,
+        message: mesaj,
         icon: "Icon.16x16",
         persistent: true
       });
@@ -65,7 +91,7 @@ function analiz(payload, event) {
     } else {
       Office.context.mailbox.item.notificationMessages.replaceAsync("mailguard_1", {
         type: Office.MailboxEnums.ItemNotificationMessageType.InformationalMessage,
-        message: mesaj2,
+        message: mesaj,
         icon: "Icon.16x16",
         persistent: true
       });
@@ -77,7 +103,3 @@ function analiz(payload, event) {
     event.completed({ allowEvent: true });
   });
 }
-
-Office.onReady(function () {
-  Office.actions.associate("onItemSend", onItemSend);
-});
