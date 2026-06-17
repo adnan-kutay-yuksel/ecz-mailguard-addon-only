@@ -65,7 +65,7 @@ function analiz(payload, jwt, event) {
     }
 
     var aciklama = (karar.aciklama || "").substring(0, 60);
-    var mesaj = "Risk skoru" + (karar.skor || "?") + "/10: " + aciklama;
+    var mesaj = "Risk skoru: " + (karar.skor || "?") + "/10 - " + aciklama;
 
     if (aktifMod === "SERBEST") {
       event.completed({ allowEvent: true });
