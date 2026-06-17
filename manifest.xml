@@ -10,11 +10,13 @@
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="MailGuard"/>
   <Description DefaultValue="MailGuard compliance checker"/>
-  <IconUrl DefaultValue="https://adnan-kutay-yuksel.github.io/ecz-mailguard-addon-only/icon.png"/>
-  <HighResolutionIconUrl DefaultValue="https://adnan-kutay-yuksel.github.io/ecz-mailguard-addon-only/icon.png"/>
+  <IconUrl DefaultValue="https://adnan-kutay-yuksel.github.io/ecz-mailguard-addon-only/icon-80.png"/>
+  <HighResolutionIconUrl DefaultValue="https://adnan-kutay-yuksel.github.io/ecz-mailguard-addon-only/icon-80.png"/>
   <SupportUrl DefaultValue="https://adnan-kutay-yuksel.github.io/ecz-mailguard-addon-only"/>
   <AppDomains>
     <AppDomain>https://adnan-kutay-yuksel.github.io/ecz-mailguard-addon-only</AppDomain>
+    <AppDomain>https://adnan-kutay-yuksel.github.io</AppDomain>
+    <AppDomain>https://unworthy-dreamily-calculus.ngrok-free.dev</AppDomain>
   </AppDomains>
   <Hosts>
     <Host Name="Mailbox"/>
@@ -80,9 +82,9 @@
     </Hosts>
     <Resources>
       <bt:Images>
-        <bt:Image id="Icon.16x16" DefaultValue="https://adnan-kutay-yuksel.github.io/ecz-mailguard-addon-only/icon.png"/>
-        <bt:Image id="Icon.32x32" DefaultValue="https://adnan-kutay-yuksel.github.io/ecz-mailguard-addon-only/icon.png"/>
-        <bt:Image id="Icon.80x80" DefaultValue="https://adnan-kutay-yuksel.github.io/ecz-mailguard-addon-only/icon.png"/>
+        <bt:Image id="Icon.16x16" DefaultValue="https://adnan-kutay-yuksel.github.io/ecz-mailguard-addon-only/icon-16.png"/>
+        <bt:Image id="Icon.32x32" DefaultValue="https://adnan-kutay-yuksel.github.io/ecz-mailguard-addon-only/icon-32.png"/>
+        <bt:Image id="Icon.80x80" DefaultValue="https://adnan-kutay-yuksel.github.io/ecz-mailguard-addon-only/icon-80.png"/>
       </bt:Images>
       <bt:Urls>
         <bt:Url id="Commands.Url" DefaultValue="https://adnan-kutay-yuksel.github.io/ecz-mailguard-addon-only/commands.html"/>
@@ -119,9 +121,9 @@
       </Hosts>
       <Resources>
         <bt:Images>
-          <bt:Image id="Icon.16x16" DefaultValue="https://adnan-kutay-yuksel.github.io/ecz-mailguard-addon-only/icon.png"/>
-          <bt:Image id="Icon.32x32" DefaultValue="https://adnan-kutay-yuksel.github.io/ecz-mailguard-addon-only/icon.png"/>
-          <bt:Image id="Icon.80x80" DefaultValue="https://adnan-kutay-yuksel.github.io/ecz-mailguard-addon-only/icon.png"/>
+          <bt:Image id="Icon.16x16" DefaultValue="https://adnan-kutay-yuksel.github.io/ecz-mailguard-addon-only/icon-16.png"/>
+          <bt:Image id="Icon.32x32" DefaultValue="https://adnan-kutay-yuksel.github.io/ecz-mailguard-addon-only/icon-32.png"/>
+          <bt:Image id="Icon.80x80" DefaultValue="https://adnan-kutay-yuksel.github.io/ecz-mailguard-addon-only/icon-80.png"/>
         </bt:Images>
         <bt:Urls>
           <bt:Url id="Commands.Url" DefaultValue="https://adnan-kutay-yuksel.github.io/ecz-mailguard-addon-only/commands.html"/>
