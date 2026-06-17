@@ -79,6 +79,11 @@ function analiz(payload, jwt, event) {
         { height: 30, width: 40, promptBeforeOpen: false },
         function (asyncResult) {
           if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+            Office.context.mailbox.item.notificationMessages.replaceAsync("mailguard_1", {
+              type: Office.MailboxEnums.ItemNotificationMessageType.ErrorMessage,
+              message: "MailGuard: " + mesaj + " | Onay icin Outlook uygulamasini kullanin.",
+              persistent: true
+            });
             event.completed({ allowEvent: false });
             return;
           }
@@ -102,9 +107,8 @@ function analiz(payload, jwt, event) {
 
     } else {
       Office.context.mailbox.item.notificationMessages.replaceAsync("mailguard_1", {
-        type: Office.MailboxEnums.ItemNotificationMessageType.InformationalMessage,
-        message: mesaj,
-        icon: "Icon.16x16",
+        type: Office.MailboxEnums.ItemNotificationMessageType.ErrorMessage,
+        message: "MailGuard: " + mesaj,
         persistent: true
       });
       event.completed({ allowEvent: false });
