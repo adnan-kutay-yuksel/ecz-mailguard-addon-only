@@ -65,7 +65,7 @@ function analiz(payload, jwt, event) {
     }
 
     var aciklama = (karar.aciklama || "").substring(0, 60);
-    var mesaj = "Risk Skoru: " + (karar.skor || "?") + "/10 | " + aciklama;
+    var mesaj = "MailGuard Risk " + (karar.skor || "?") + "/10: " + aciklama;
 
     if (aktifMod === "SERBEST") {
       event.completed({ allowEvent: true });
@@ -81,8 +81,7 @@ function analiz(payload, jwt, event) {
           if (asyncResult.status === Office.AsyncResultStatus.Failed) {
             Office.context.mailbox.item.notificationMessages.replaceAsync("mailguard_1", {
               type: Office.MailboxEnums.ItemNotificationMessageType.ErrorMessage,
-              message: "MailGuard: " + mesaj + " | Onay icin Outlook uygulamasini kullanin.",
-              persistent: true
+              message: mesaj + " | Onay icin Outlook uygulamasini kullanin."
             });
             event.completed({ allowEvent: false });
             return;
@@ -108,8 +107,7 @@ function analiz(payload, jwt, event) {
     } else {
       Office.context.mailbox.item.notificationMessages.replaceAsync("mailguard_1", {
         type: Office.MailboxEnums.ItemNotificationMessageType.ErrorMessage,
-        message: "MailGuard: " + mesaj,
-        persistent: true
+        message: mesaj
       });
       event.completed({ allowEvent: false });
     }
