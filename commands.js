@@ -18,7 +18,6 @@ function onItemSend(event) {
     item.body.getAsync(Office.CoercionType.Text, function (bodyResult) {
       var icerik = bodyResult.value || "";
 
-      // Önce token al, sonra analiz et
       fetch(API_BASE + "/token", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -72,13 +71,34 @@ function analiz(payload, jwt, event) {
       event.completed({ allowEvent: true });
 
     } else if (aktifMod === "KONTROLLU") {
-      Office.context.mailbox.item.notificationMessages.replaceAsync("mailguard_1", {
-        type: Office.MailboxEnums.ItemNotificationMessageType.InformationalMessage,
-        message: mesaj,
-        icon: "Icon.16x16",
-        persistent: true
-      });
-      event.completed({ allowEvent: true });
+      var dialogUrl = "https://adnan-kutay-yuksel.github.io/ecz-mailguard-addon-only/confirm.html"
+        + "?mesaj=" + encodeURIComponent(mesaj);
+
+      Office.context.ui.displayDialogAsync(
+        dialogUrl,
+        { height: 30, width: 40, promptBeforeOpen: false },
+        function (asyncResult) {
+          if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+            event.completed({ allowEvent: false });
+            return;
+          }
+
+          var dialog = asyncResult.value;
+
+          dialog.addEventHandler(Office.EventType.DialogMessageReceived, function (arg) {
+            dialog.close();
+            if (arg.message === "GONDER") {
+              event.completed({ allowEvent: true });
+            } else {
+              event.completed({ allowEvent: false });
+            }
+          });
+
+          dialog.addEventHandler(Office.EventType.DialogEventReceived, function () {
+            event.completed({ allowEvent: false });
+          });
+        }
+      );
 
     } else {
       Office.context.mailbox.item.notificationMessages.replaceAsync("mailguard_1", {
