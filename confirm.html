@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>MailGuard Uyarı</title>
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+  <style>
+    body { font-family: Segoe UI, sans-serif; padding: 20px; background: #fff; }
+    .uyari { background: #fff4ce; border-left: 4px solid #f7a800; padding: 12px; margin-bottom: 20px; font-size: 14px; }
+    .butonlar { display: flex; gap: 12px; }
+    button { padding: 8px 20px; font-size: 14px; cursor: pointer; border: none; border-radius: 4px; }
+    .gonder { background: #d83b01; color: white; }
+    .iptal  { background: #e1e1e1; color: #333; }
+  </style>
+</head>
+<body>
+  <div class="uyari" id="mesajDiv">Analiz yapılıyor...</div>
+  <p>Bu e-posta rekabet hukuku riski içeriyor olabilir. Yine de göndermek istiyor musunuz?</p>
+  <div class="butonlar">
+    <button class="gonder" onclick="gonder()">Yine de Gönder</button>
+    <button class="iptal"  onclick="iptal()">İptal Et</button>
+  </div>
+
+  <script>
+    Office.onReady(function () {
+      var params = new URLSearchParams(window.location.search);
+      var mesaj = params.get("mesaj") || "Risk tespit edildi.";
+      document.getElementById("mesajDiv").textContent = mesaj;
+    });
+
+    function gonder() {
+      Office.context.ui.messageParent("GONDER");
+    }
+
+    function iptal() {
+      Office.context.ui.messageParent("IPTAL");
+    }
+  </script>
+</body>
+</html>
