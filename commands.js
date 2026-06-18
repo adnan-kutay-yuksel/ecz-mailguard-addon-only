@@ -1,3 +1,5 @@
+// MailGuard — On-Send Handler
+
 const API_BASE = "https://unworthy-dreamily-calculus.ngrok-free.dev";
 
 Office.onReady(function () {
@@ -42,7 +44,7 @@ function onItemSend(event) {
         analiz({ konu: konu, icerik: icerik, gonderen: gonderen }, jwt, event);
       })
       .catch(function (err) {
-        console.error("CATCH TETIKLENDI token:", err.message);
+        console.error("MailGuard token hatasi:", err.message);
         gosterFallbackUyari(event);
       });
     });
@@ -78,7 +80,7 @@ function analiz(payload, jwt, event) {
     }
 
     var aciklama = (karar.aciklama || "").substring(0, 60);
-    var mesaj = "Yazışmanı kontrol etmeni öneririz! Risk skoru: " + (karar.skor || "?") + "/10 - " + aciklama;
+    var mesaj = "Yazismanizi kontrol edin! Risk skoru: " + (karar.skor || "?") + "/10 - " + aciklama;
 
     if (aktifMod === "SERBEST") {
       event.completed({ allowEvent: true });
@@ -95,8 +97,9 @@ function analiz(payload, jwt, event) {
             Office.context.mailbox.item.notificationMessages.replaceAsync("mailguard_1", {
               type: Office.MailboxEnums.ItemNotificationMessageType.ErrorMessage,
               message: mesaj + " | Onay icin Outlook uygulamasini kullanin."
+            }, function () {
+              event.completed({ allowEvent: false });
             });
-            event.completed({ allowEvent: false });
             return;
           }
 
@@ -121,12 +124,13 @@ function analiz(payload, jwt, event) {
       Office.context.mailbox.item.notificationMessages.replaceAsync("mailguard_1", {
         type: Office.MailboxEnums.ItemNotificationMessageType.ErrorMessage,
         message: mesaj
+      }, function () {
+        event.completed({ allowEvent: false });
       });
-      event.completed({ allowEvent: false });
     }
   })
   .catch(function (err) {
-    console.error("CATCH TETIKLENDI analiz:", err.message);
+    console.error("MailGuard analiz hatasi:", err.message);
     gosterFallbackUyari(event);
   });
 }
@@ -140,7 +144,7 @@ function gosterFallbackUyari(event) {
       message: "MailGuard erisilemuyor. DLP politikalari gecerlidir. Sorumlusunuz."
     },
     function (result) {
-      console.log("notification result:", JSON.stringify(result));
+      console.log("fallback notification result:", JSON.stringify(result));
       event.completed({ allowEvent: true });
     }
   );
