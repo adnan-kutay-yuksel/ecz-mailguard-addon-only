@@ -1,5 +1,3 @@
-// MailGuard — On-Send Handler
-
 const API_BASE = "https://unworthy-dreamily-calculus.ngrok-free.dev";
 
 Office.onReady(function () {
@@ -7,6 +5,21 @@ Office.onReady(function () {
 });
 
 Office.initialize = function () {};
+
+function fetchWithTimeout(url, options, ms) {
+  return new Promise(function (resolve, reject) {
+    var timer = setTimeout(function () {
+      reject(new Error("timeout"));
+    }, ms);
+    fetch(url, options).then(function (res) {
+      clearTimeout(timer);
+      resolve(res);
+    }).catch(function (err) {
+      clearTimeout(timer);
+      reject(err);
+    });
+  });
+}
 
 function onItemSend(event) {
   var item     = Office.context.mailbox.item;
@@ -18,33 +31,33 @@ function onItemSend(event) {
     item.body.getAsync(Office.CoercionType.Text, function (bodyResult) {
       var icerik = bodyResult.value || "";
 
-      fetch(API_BASE + "/token", {
+      fetchWithTimeout(API_BASE + "/token", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ kullanici: gonderen })
-      })
+      }, 8000)
       .then(function (res) { return res.json(); })
       .then(function (tokenData) {
         var jwt = tokenData.token;
         analiz({ konu: konu, icerik: icerik, gonderen: gonderen }, jwt, event);
       })
       .catch(function (err) {
-        console.error("CATCH TETIKLENDI:", err.message);
-        event.completed({ allowEvent: true });
+        console.error("CATCH TETIKLENDI token:", err.message);
+        gosterFallbackUyari(event);
       });
     });
   });
 }
 
 function analiz(payload, jwt, event) {
-  fetch(API_BASE + "/analiz", {
+  fetchWithTimeout(API_BASE + "/analiz", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "Authorization": "Bearer " + jwt
     },
     body: JSON.stringify(payload)
-  })
+  }, 20000)
   .then(function (res) { return res.json(); })
   .then(function (data) {
     var aktifMod = data.aktif_mod || "ZORUNLU";
@@ -113,7 +126,22 @@ function analiz(payload, jwt, event) {
     }
   })
   .catch(function (err) {
-    console.error("CATCH TETIKLENDI:", err.message);
-    event.completed({ allowEvent: true });
+    console.error("CATCH TETIKLENDI analiz:", err.message);
+    gosterFallbackUyari(event);
   });
+}
+
+function gosterFallbackUyari(event) {
+  console.log("FALLBACK TETIKLENDI");
+  Office.context.mailbox.item.notificationMessages.replaceAsync(
+    "mailguard_offline",
+    {
+      type: Office.MailboxEnums.ItemNotificationMessageType.ErrorMessage,
+      message: "MailGuard erisilemuyor. DLP politikalari gecerlidir. Sorumlusunuz."
+    },
+    function (result) {
+      console.log("notification result:", JSON.stringify(result));
+      event.completed({ allowEvent: true });
+    }
+  );
 }
