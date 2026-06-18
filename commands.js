@@ -29,8 +29,8 @@ function onItemSend(event) {
         analiz({ konu: konu, icerik: icerik, gonderen: gonderen }, jwt, event);
       })
       .catch(function (err) {
-      console.error("MailGuard token hatasi:", err);
-      gosterFallbackUyari(event);
+        console.error("CATCH TETIKLENDI:", err.message);
+        event.completed({ allowEvent: true });
       });
     });
   });
@@ -113,25 +113,7 @@ function analiz(payload, jwt, event) {
     }
   })
   .catch(function (err) {
-  console.error("MailGuard token hatasi:", err);
-  gosterFallbackUyari(event);
-});
-}
-
-function gosterFallbackUyari(event) {
-  event.completed({ allowEvent: true });
-  try {
-    Office.context.mailbox.item.notificationMessages.replaceAsync(
-      "mailguard_offline",
-      {
-        type: Office.MailboxEnums.ItemNotificationMessageType.ErrorMessage,
-        message: "MailGuard erisilemuyor. DLP politikalari gecerlidir. Icerikten hukuki olarak sorumlusunuz."
-      },
-      function () {}
-    );
-  } catch (e) {
-    console.error("MailGuard notification hatasi:", e);
-  }
-}
-  }
+    console.error("CATCH TETIKLENDI:", err.message);
+    event.completed({ allowEvent: true });
+  });
 }
