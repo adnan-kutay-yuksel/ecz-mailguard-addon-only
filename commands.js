@@ -29,12 +29,7 @@ function onItemSend(event) {
       })
       .catch(function (err) {
         console.error("MailGuard token hatasi:", err);
-        Office.context.mailbox.item.notificationMessages.replaceAsync("mailguard_offline", {
-          type: Office.MailboxEnums.ItemNotificationMessageType.ErrorMessage,
-          message: "MailGuard erisilemuyor. DLP politikalari gecerlidir. Sorumlusunuz."
-        }, function () {
-          event.completed({ allowEvent: true });
-        });
+        event.completed({ allowEvent: true });
       });
     });
   });
@@ -118,11 +113,6 @@ function analiz(payload, jwt, event) {
   })
   .catch(function (err) {
     console.error("MailGuard API hatasi:", err);
-    Office.context.mailbox.item.notificationMessages.replaceAsync("mailguard_offline", {
-      type: Office.MailboxEnums.ItemNotificationMessageType.ErrorMessage,
-      message: "MailGuard erisilemuyor. DLP politikalari gecerlidir. Sorumlusunuz."
-    }, function () {
-      event.completed({ allowEvent: true });
-    });
+    event.completed({ allowEvent: true });
   });
 }
