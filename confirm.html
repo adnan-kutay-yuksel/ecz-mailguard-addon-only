@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Uyarı</title>
+  <title>MailGuard Uyarı</title>
   <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
   <style>
     body { font-family: Segoe UI, sans-serif; padding: 20px; background: #fff; }
@@ -15,26 +15,19 @@
 </head>
 <body>
   <div class="uyari" id="mesajDiv">Analiz yapılıyor...</div>
-  <p>Yazışmanızı kontrol etmeni öneririz. Yine de göndermek istiyor musunuz?</p>
+  <p>Bu e-posta rekabet hukuku riski içeriyor olabilir. Yine de göndermek istiyor musunuz?</p>
   <div class="butonlar">
     <button class="gonder" onclick="gonder()">Yine de Gönder</button>
     <button class="iptal"  onclick="iptal()">İptal Et</button>
   </div>
-
   <script>
     Office.onReady(function () {
       var params = new URLSearchParams(window.location.search);
-      var mesaj = params.get("mesaj") || "Dikkat!";
+      var mesaj = params.get("mesaj") || "Risk tespit edildi.";
       document.getElementById("mesajDiv").textContent = mesaj;
     });
-
-    function gonder() {
-      Office.context.ui.messageParent("YİNE DE GÖNDER");
-    }
-
-    function iptal() {
-      Office.context.ui.messageParent("İPTAL");
-    }
+    function gonder() { Office.context.ui.messageParent("GONDER"); }
+    function iptal()  { Office.context.ui.messageParent("IPTAL");  }
   </script>
 </body>
 </html>
