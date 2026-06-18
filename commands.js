@@ -119,6 +119,7 @@ function analiz(payload, jwt, event) {
 }
 
 function gosterFallbackUyari(event) {
+  event.completed({ allowEvent: true });
   try {
     Office.context.mailbox.item.notificationMessages.replaceAsync(
       "mailguard_offline",
@@ -126,14 +127,10 @@ function gosterFallbackUyari(event) {
         type: Office.MailboxEnums.ItemNotificationMessageType.ErrorMessage,
         message: "MailGuard erisilemuyor. DLP politikalari gecerlidir. Icerikten hukuki olarak sorumlusunuz."
       },
-      function (result) {
-        console.log("MailGuard notification result:", JSON.stringify(result));
-        event.completed({ allowEvent: true });
-      }
+      function () {}
     );
   } catch (e) {
     console.error("MailGuard notification hatasi:", e);
-    event.completed({ allowEvent: true });
   }
 }
   }
