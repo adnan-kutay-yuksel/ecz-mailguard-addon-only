@@ -119,12 +119,21 @@ function analiz(payload, jwt, event) {
 }
 
 function gosterFallbackUyari(event) {
-  Office.context.mailbox.item.notificationMessages.replaceAsync("mailguard_offline", {
-    type: Office.MailboxEnums.ItemNotificationMessageType.InformationalMessage,
-    message: "⚠️ MailGuard şu an erişilemez. Şirket DLP politikaları geçerliliğini korumaktadır. Bu maili göndermekle içerikten hukuki olarak sorumlu olduğunuzu kabul etmiş sayılırsınız.",
-    icon: "icon16",
-    persistent: false
-  }, function () {
+  try {
+    Office.context.mailbox.item.notificationMessages.replaceAsync(
+      "mailguard_offline",
+      {
+        type: Office.MailboxEnums.ItemNotificationMessageType.InformationalMessage,
+        message: "⚠️ MailGuard şu an erişilemez. Şirket DLP politikaları geçerliliğini korumaktadır. Bu maili göndermekle içerikten hukuki olarak sorumlu olduğunuzu kabul etmiş sayılırsınız.",
+        persistent: false
+      },
+      function (result) {
+        console.log("MailGuard notification result:", JSON.stringify(result));
+        event.completed({ allowEvent: true });
+      }
+    );
+  } catch (e) {
+    console.error("MailGuard notification hatasi:", e);
     event.completed({ allowEvent: true });
-  });
+  }
 }
