@@ -124,7 +124,7 @@ function gosterFallbackUyari(event) {
       "mailguard_offline",
       {
         type: Office.MailboxEnums.ItemNotificationMessageType.ErrorMessage,
-        message: "⚠️ MailGuard şu an erişilemez. Şirket DLP politikaları geçerliliğini korumaktadır. Bu maili göndermekle içerikten hukuki olarak sorumlu olduğunuzu kabul etmiş sayılırsınız."
+        message: "MailGuard erisilemuyor. DLP politikalari gecerlidir. Icerikten hukuki olarak sorumlusunuz."
       },
       function (result) {
         console.log("MailGuard notification result:", JSON.stringify(result));
@@ -134,5 +134,7 @@ function gosterFallbackUyari(event) {
   } catch (e) {
     console.error("MailGuard notification hatasi:", e);
     event.completed({ allowEvent: true });
+  }
+}
   }
 }
