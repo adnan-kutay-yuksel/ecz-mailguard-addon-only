@@ -19,7 +19,10 @@ function onItemSend(event) {
 
       fetch(API_BASE + "/token", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "1"
+        },
         body: JSON.stringify({ kullanici: gonderen })
       })
       .then(function (res) { return res.json(); })
@@ -40,7 +43,8 @@ function analiz(payload, jwt, event) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": "Bearer " + jwt
+      "Authorization": "Bearer " + jwt,
+      "ngrok-skip-browser-warning": "1"
     },
     body: JSON.stringify(payload)
   })
