@@ -9,7 +9,7 @@
   <ProviderName>MailGuard</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="MailGuard"/>
-  <Description DefaultValue="MailGuard compliance checker"/>
+  <Description DefaultValue="MailGuard e-mail checker"/>
   <IconUrl DefaultValue="https://adnan-kutay-yuksel.github.io/ecz-mailguard-addon-only/icon-80.png"/>
   <HighResolutionIconUrl DefaultValue="https://adnan-kutay-yuksel.github.io/ecz-mailguard-addon-only/icon-80.png"/>
   <SupportUrl DefaultValue="https://adnan-kutay-yuksel.github.io/ecz-mailguard-addon-only"/>
@@ -96,8 +96,8 @@
         <bt:String id="ActionButton.Label" DefaultValue="Check"/>
       </bt:ShortStrings>
       <bt:LongStrings>
-        <bt:String id="TaskpaneButton.Tooltip" DefaultValue="MailGuard compliance checker"/>
-        <bt:String id="ActionButton.Tooltip" DefaultValue="Check email for compliance"/>
+        <bt:String id="TaskpaneButton.Tooltip" DefaultValue="MailGuard checker"/>
+        <bt:String id="ActionButton.Tooltip" DefaultValue="Checks your emails for you"/>
       </bt:LongStrings>
     </Resources>
     <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides/1.1" xsi:type="VersionOverridesV1_1">
@@ -135,8 +135,8 @@
           <bt:String id="ActionButton.Label" DefaultValue="Check"/>
         </bt:ShortStrings>
         <bt:LongStrings>
-          <bt:String id="TaskpaneButton.Tooltip" DefaultValue="MailGuard compliance checker"/>
-          <bt:String id="ActionButton.Tooltip" DefaultValue="Check email for compliance"/>
+          <bt:String id="TaskpaneButton.Tooltip" DefaultValue="MailGuard checker"/>
+          <bt:String id="ActionButton.Tooltip" DefaultValue="Checks your emails for you"/>
         </bt:LongStrings>
       </Resources>
     </VersionOverrides>
