@@ -4,14 +4,42 @@ Office.onReady(function () {
   Office.actions.associate("onItemSend", onItemSend);
 });
 Office.initialize = function () {};
-function bildirOfflineGonderildi() {
-  Office.context.mailbox.item.notificationMessages.replaceAsync("mailguard_offline", {
-    type: Office.MailboxEnums.ItemNotificationMessageType.InformationalMessage,
-    message: "MailGuard'a erisilemedi, mail kontrolsuz gonderildi.",
-    icon: "icon1",
-    persistent: false
-  });
+
+function offlineOnayDialogGoster(event) {
+  var mesaj = "MailGuard suanda devrede degil. Mailinizi gondermeden once kontrol ediniz.";
+  var dialogUrl = "https://adnan-kutay-yuksel.github.io/ecz-mailguard-addon-only/confirm.html"
+    + "?mesaj=" + encodeURIComponent(mesaj);
+  Office.context.ui.displayDialogAsync(
+    dialogUrl,
+    { height: 30, width: 40, promptBeforeOpen: false },
+    function (asyncResult) {
+      if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+        // Dialog bile acilamadiysa, kullaniciyi sonsuza kadar bekletmemek icin
+        // bilgilendirici notification birakip mail'i bekletmeden gonder.
+        Office.context.mailbox.item.notificationMessages.replaceAsync("mailguard_offline", {
+          type: Office.MailboxEnums.ItemNotificationMessageType.ErrorMessage,
+          message: mesaj + " (Onay penceresi acilamadi.)"
+        });
+        event.completed({ allowEvent: true });
+        return;
+      }
+      var dialog = asyncResult.value;
+      dialog.addEventHandler(Office.EventType.DialogMessageReceived, function (arg) {
+        dialog.close();
+        if (arg.message === "GONDER") {
+          event.completed({ allowEvent: true });
+        } else {
+          event.completed({ allowEvent: false });
+        }
+      });
+      dialog.addEventHandler(Office.EventType.DialogEventReceived, function () {
+        // Kullanici dialogu (X) ile kapatirsa: hicbir sey yapmadan bekle, gondermesin.
+        event.completed({ allowEvent: false });
+      });
+    }
+  );
 }
+
 function onItemSend(event) {
   var item     = Office.context.mailbox.item;
   var gonderen = Office.context.mailbox.userProfile.emailAddress || "bilinmiyor";
@@ -31,12 +59,12 @@ function onItemSend(event) {
       })
       .catch(function (err) {
         console.error("MailGuard token hatasi:", err);
-        bildirOfflineGonderildi();
-        event.completed({ allowEvent: true });
+        offlineOnayDialogGoster(event);
       });
     });
   });
 }
+
 function analiz(payload, jwt, event) {
   fetch(API_BASE + "/analiz", {
     method: "POST",
@@ -104,7 +132,6 @@ function analiz(payload, jwt, event) {
   })
   .catch(function (err) {
     console.error("MailGuard API hatasi:", err);
-    bildirOfflineGonderildi();
-    event.completed({ allowEvent: true });
+    offlineOnayDialogGoster(event);
   });
 }
