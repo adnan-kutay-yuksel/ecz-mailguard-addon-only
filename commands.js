@@ -6,8 +6,8 @@ Office.onReady(function () {
 Office.initialize = function () {};
 
 function offlineOnayDialogGoster(event) {
-  var mesaj = "MailGuard suanda devrede degil. Mailinizi gondermeden once kontrol ediniz.";
-  var soru  = "Yine de gondermek istiyor musunuz?";
+  var mesaj = "MailGuard şu anda devrede değil. Mailinizi göndermeden önce kontrol ediniz.";
+  var soru  = "Yine de göndermek istiyor musunuz?";
   var dialogUrl = "https://adnan-kutay-yuksel.github.io/ecz-mailguard-addon-only/confirm.html"
     + "?mesaj=" + encodeURIComponent(mesaj)
     + "&soru="  + encodeURIComponent(soru);
@@ -20,7 +20,7 @@ function offlineOnayDialogGoster(event) {
         // bilgilendirici notification birakip mail'i bekletmeden gonder.
         Office.context.mailbox.item.notificationMessages.replaceAsync("mailguard_offline", {
           type: Office.MailboxEnums.ItemNotificationMessageType.ErrorMessage,
-          message: mesaj + " (Onay penceresi acilamadi.)"
+          message: mesaj + " (Onay penceresi açılamadı.)"
         });
         event.completed({ allowEvent: true });
         return;
