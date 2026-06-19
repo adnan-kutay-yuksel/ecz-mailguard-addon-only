@@ -15,7 +15,7 @@
 </head>
 <body>
   <div class="uyari" id="mesajDiv">Analiz yapılıyor...</div>
-  <p>Bu e-posta rekabet hukuku riski içeriyor olabilir. Yine de göndermek istiyor musunuz?</p>
+  <p id="soruDiv">Yine de göndermek istiyor musunuz?</p>
   <div class="butonlar">
     <button class="gonder" onclick="gonder()">Yine de Gönder</button>
     <button class="iptal"  onclick="iptal()">İptal Et</button>
@@ -24,10 +24,16 @@
     Office.onReady(function () {
       var params = new URLSearchParams(window.location.search);
       var mesaj = params.get("mesaj") || "Risk tespit edildi.";
+      var soru  = params.get("soru")  || "Yine de göndermek istiyor musunuz?";
       document.getElementById("mesajDiv").textContent = mesaj;
+      document.getElementById("soruDiv").textContent  = soru;
     });
-    function gonder() { Office.context.ui.messageParent("GONDER"); }
-    function iptal()  { Office.context.ui.messageParent("IPTAL");  }
+    function gonder() {
+      Office.context.ui.messageParent("GONDER");
+    }
+    function iptal() {
+      Office.context.ui.messageParent("IPTAL");
+    }
   </script>
 </body>
 </html>
