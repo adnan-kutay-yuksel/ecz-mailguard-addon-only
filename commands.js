@@ -6,8 +6,8 @@ Office.onReady(function () {
 Office.initialize = function () {};
 
 function offlineOnayDialogGoster(event) {
-  var mesaj = "MailGuard şu anda devrede değil. Mailinizi göndermeden önce kontrol ediniz.";
-  var soru  = "Yine de göndermek istiyor musunuz?";
+  var mesaj = "MailGuard şu anda devrede değil.";
+  var soru  = "Mailinizi göndermeden önce kontrol ediniz.";
   var dialogUrl = "https://adnan-kutay-yuksel.github.io/ecz-mailguard-addon-only/confirm.html"
     + "?mesaj=" + encodeURIComponent(mesaj)
     + "&soru="  + encodeURIComponent(soru);
@@ -98,7 +98,7 @@ function analiz(payload, jwt, event) {
     } else if (aktifMod === "KONTROLLU") {
       var dialogUrl = "https://adnan-kutay-yuksel.github.io/ecz-mailguard-addon-only/confirm.html"
         + "?mesaj=" + encodeURIComponent(mesaj)
-        + "&soru="  + encodeURIComponent("Bu e-posta rekabet hukuku riski içeriyor olabilir. Yine de göndermek istiyor musunuz?");
+        + "&soru="  + encodeURIComponent("MailGuard yazışmanızı kontrol etmeni öneriyor. Yine de göndermek istiyor musunuz?");
       Office.context.ui.displayDialogAsync(
         dialogUrl,
         { height: 30, width: 40, promptBeforeOpen: false },
