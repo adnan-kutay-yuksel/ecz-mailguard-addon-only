@@ -16,8 +16,6 @@ function offlineOnayDialogGoster(event) {
     { height: 30, width: 40, promptBeforeOpen: false },
     function (asyncResult) {
       if (asyncResult.status === Office.AsyncResultStatus.Failed) {
-        // Dialog bile acilamadiysa, kullaniciyi sonsuza kadar bekletmemek icin
-        // bilgilendirici notification birakip mail'i bekletmeden gonder.
         Office.context.mailbox.item.notificationMessages.replaceAsync("mailguard_offline", {
           type: Office.MailboxEnums.ItemNotificationMessageType.ErrorMessage,
           message: mesaj + " (Onay penceresi açılamadı.)"
@@ -35,7 +33,6 @@ function offlineOnayDialogGoster(event) {
         }
       });
       dialog.addEventHandler(Office.EventType.DialogEventReceived, function () {
-        // Kullanici dialogu (X) ile kapatirsa: hicbir sey yapmadan bekle, gondermesin.
         event.completed({ allowEvent: false });
       });
     }
@@ -91,14 +88,13 @@ function analiz(payload, jwt, event) {
       event.completed({ allowEvent: true });
       return;
     }
-    var aciklama = (karar.aciklama || "").substring(0, 60);
-    var mesaj = "MailGuard Risk " + (karar.skor || "?") + "/10: " + aciklama;
+    var sabitMesaj = "MailGuard yazışmanızı kontrol etmenizi öneriyor.";
     if (aktifMod === "SERBEST") {
       event.completed({ allowEvent: true });
     } else if (aktifMod === "KONTROLLU") {
       var dialogUrl = "https://adnan-kutay-yuksel.github.io/ecz-mailguard-addon-only/confirm.html"
-        + "?mesaj=" + encodeURIComponent(mesaj)
-        + "&soru="  + encodeURIComponent("MailGuard yazışmanızı kontrol etmeni öneriyor. Yine de göndermek istiyor musunuz?");
+        + "?mesaj=" + encodeURIComponent(sabitMesaj)
+        + "&soru="  + encodeURIComponent("Yine de göndermek istiyor musunuz?");
       Office.context.ui.displayDialogAsync(
         dialogUrl,
         { height: 30, width: 40, promptBeforeOpen: false },
@@ -106,7 +102,7 @@ function analiz(payload, jwt, event) {
           if (asyncResult.status === Office.AsyncResultStatus.Failed) {
             Office.context.mailbox.item.notificationMessages.replaceAsync("mailguard_1", {
               type: Office.MailboxEnums.ItemNotificationMessageType.ErrorMessage,
-              message: mesaj + " | Onay icin Outlook uygulamasini kullanin."
+              message: sabitMesaj + " | Onay için Outlook uygulamasını kullanın."
             });
             event.completed({ allowEvent: false });
             return;
@@ -128,7 +124,7 @@ function analiz(payload, jwt, event) {
     } else {
       Office.context.mailbox.item.notificationMessages.replaceAsync("mailguard_1", {
         type: Office.MailboxEnums.ItemNotificationMessageType.ErrorMessage,
-        message: mesaj
+        message: sabitMesaj
       });
       event.completed({ allowEvent: false });
     }
